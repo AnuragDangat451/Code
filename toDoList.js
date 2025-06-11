@@ -1,14 +1,19 @@
 let todoList = [];
+
 function showMenu() {
-  console.log("\n1. Add Task\n2. View Tasks\n3. Delete Task\n4. Exit");
+  console.log("1. Add Task");
+  console.log("2. View Tasks");
+  console.log("3. Delete Task");
+  console.log("4. Clear All");
+  console.log("5. Exit");
 }
 
 function addTask() {
   try {
     let task = prompt("Enter task:");
-    if (!task) throw "Empty task!";
-    todoList.push(task);
-    console.log("Added.");
+    if (!task || task.trim() === "") throw "Empty task!";
+    todoList.push(task.trim());
+    console.log("Task added.");
   } catch (e) {
     console.log("Error:", e);
   }
@@ -17,6 +22,7 @@ function addTask() {
 function viewTasks() {
   try {
     if (todoList.length === 0) throw "No tasks.";
+    console.log("\nYour Tasks:");
     todoList.forEach((t, i) => console.log(`${i + 1}. ${t}`));
   } catch (e) {
     console.log("Error:", e);
@@ -25,102 +31,59 @@ function viewTasks() {
 
 function deleteTask() {
   try {
-    let i = parseInt(prompt("Task number to delete:"));
-    if (isNaN(i) || i < 1 || i > todoList.length) throw "Invalid number.";
-    todoList.splice(i - 1, 1);
-    console.log("Deleted.");
+    let i = parseInt(prompt("Enter task number to delete:"));
+    if (isNaN(i) || i < 1 || i > todoList.length) throw "Invalid task number.";
+    let removed = todoList.splice(i - 1, 1);
+    console.log(`Deleted: ${removed}`);
   } catch (e) {
     console.log("Error:", e);
   }
 }
 
+function clearTasks() {
+  try {
+    if (todoList.length === 0) throw "No tasks to clear.";
+
+    let confirmClear = prompt("Are you sure you want to delete all tasks?");
+    if (confirmClear==="yes"||"no") {
+      todoList = [];
+      console.log("All tasks cleared.");
+    } else {
+      console.log("Clear cancelled.");
+    }
+  } catch (error) {
+    console.log("Error:", error);
+  }
+}
+
+
 let running = true;
 while (running) {
   showMenu();
-  let choice = prompt("Choice (1-4):");
+  let choice = prompt("Choice (1-5):");
+
   try {
     switch (choice) {
       case "1":
-          addTask();
-          break;
+        addTask();
+        break;
       case "2":
-          viewTasks(); 
-          break;
+        viewTasks();
+        break;
       case "3":
-          deleteTask();
-          break;
-      case "4": 
-          running = false; 
-          break;
+        deleteTask();
+        break;
+      case "4":
+        clearTasks();
+        break;
+      case "5":
+        console.log("Exiting...");
+        running = false;
+        break;
       default:
         throw "Invalid choice.";
     }
   } catch (e) {
     console.log("Error:", e);
   }
-}
-
-function addTask() {
-    try {
-        let task = prompt("Enter task to add:");
-        if (!task) throw "Task cannot be empty!";
-        todoList.push(task);
-        console.log("Task added successfully.");
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-
-function viewTasks() {
-    try {
-        if (todoList.length === 0) throw "No tasks to display.";
-        console.log("\nYour Tasks:");
-        todoList.forEach((task, index) => {
-            console.log(`${index + 1}. ${task}`);
-        });
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-
-function deleteTask() {
-    try {
-        let index = parseInt(prompt("Enter task number to delete:"));
-        if (isNaN(index) || index < 1 || index > todoList.length) {
-            throw "Invalid task number.";
-        }
-        todoList.splice(index - 1, 1);
-        console.log("Task deleted successfully.");
-    } catch (error) {
-        console.error("Error:", error);
-    }
-}
-
-let isRunning = true;
-
-while (isRunning) {
-    showMenu();
-    let choice = prompt("Enter your choice (1-4):");
-
-    try {
-        switch (choice) {
-            case "1":
-                addTask();
-                break;
-            case "2":
-                viewTasks();
-                break;
-            case "3":
-                deleteTask();
-                break;
-            case "4":
-                isRunning = false;
-                console.log("Exiting... Thank you!");
-                break;
-            default:
-                throw "Invalid choice. Please select 1-4.";
-        }
-    } catch (error) {
-        console.error("Error:", error);
-    }
 }
